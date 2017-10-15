@@ -8,11 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -61,68 +60,38 @@ public class FirstFragment extends android.support.v4.app.Fragment{
         addItem.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LinearLayout layout = new LinearLayout(getContext());
-                layout.setOrientation(LinearLayout.VERTICAL);
 
-                final EditText etYear = new EditText(getContext());
-                etYear.setHint("몇년인지 입력하세요.");
-                final EditText etMonth = new EditText(getContext());
-                etMonth.setHint("몇월인지 입력하세요.");
-                final EditText etDay = new EditText(getContext());
-                etDay.setHint("몇일인지 입력하세요.");
-                final EditText etCategory = new EditText(getContext());
-                etCategory.setHint("카테고리를 입력하세요.");
-                final EditText etContent = new EditText(getContext());
-                etContent.setHint("항목을 입력하세요.");
-                final EditText etMoney = new EditText(getContext());
-                etMoney.setHint("돈을 입력하세요");
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                final View dialogView = inflater.inflate(R.layout.dialog_add_expense, null);
 
-                layout.addView(etYear);
-                layout.addView(etMonth);
-                layout.addView(etDay);
-                layout.addView(etCategory);
-                layout.addView(etContent);
-                layout.addView(etMoney);
+                final Spinner yearSpinner = (Spinner) dialogView.findViewById(R.id.year);
+                final Spinner monthSpinner = (Spinner) dialogView.findViewById(R.id.month);
+                final Spinner daySpinner = (Spinner) dialogView.findViewById(R.id.day);
+                final Spinner categorySpinner = (Spinner) dialogView.findViewById(R.id.category);
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                 dialog.setTitle("아래 정보를 입력해주세요")
-                        .setView(layout)
+                        .setView(dialogView)
                         .setPositiveButton("등록", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                // TODO: try, catch를 null을 활용해 함수 하나로 뺴자
                                 int year, month, day, money;
-                                try {
-                                    year = Integer.parseInt(etYear.getText().toString());
-                                } catch (NumberFormatException e) {
-                                    Toast.makeText(getContext(), "년도에는 숫자를 넣어주세요", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                try {
-                                    month = Integer.parseInt(etMonth.getText().toString());
-                                } catch(NumberFormatException e) {
-                                    Toast.makeText(getContext(), "월에는 숫자를 넣어주세요", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                try {
-                                    day = Integer.parseInt(etDay.getText().toString());
-                                } catch(NumberFormatException e) {
-                                    Toast.makeText(getContext(), "일에는 숫자를 넣어주세요", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                String category = etCategory.getText().toString();
-                                if(!(category.equals("식비") || category.equals("술") || category.equals("오락")
-                                        || category.equals("교통비") || category.equals("기타"))) {
-                                    Toast.makeText(getContext(), "카테고리에는 식비, 술, 오락, 교통비, 기타만 가능합니다", Toast.LENGTH_LONG).show();
-                                    return;
-                                }
+                                String category;
+                                String content;
 
-                                String content = etContent.getText().toString();
+                                String yearString = yearSpinner.getSelectedItem().toString();
+                                year = Integer.parseInt(yearString.substring(0, yearString.length()-1));
+                                String monthString = monthSpinner.getSelectedItem().toString();
+                                month = Integer.parseInt(monthString.substring(0, monthString.length()-1));
+                                String dayString = daySpinner.getSelectedItem().toString();
+                                day = Integer.parseInt(dayString.substring(0, dayString.length()-1));
+                                category = categorySpinner.getSelectedItem().toString();
+                                content = ((TextView)dialogView.findViewById(R.id.content)).getText().toString();
                                 try {
-                                    money = Integer.parseInt(etMoney.getText().toString());
+                                    money = Integer.parseInt(((TextView)dialogView.findViewById(R.id.money)).getText().toString());
                                 } catch(NumberFormatException e) {
-                                    Toast.makeText(getContext(), "일에는 숫자를 넣어주세요", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "돈에는 숫자를 넣어주세요", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
@@ -154,7 +123,6 @@ public class FirstFragment extends android.support.v4.app.Fragment{
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //각 항목 클릭시 포지션값을 토스트에 띄운다.
                 int[] yearList = {-1, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025};
                 year = yearList[position];
                 getDataFromDB();
