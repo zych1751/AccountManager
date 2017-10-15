@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="year">
+        <item>전체</item>
+        <item>2015년</item>
+        <item>2016년</item>
+        <item>2017년</item>
+        <item>2018년</item>
+        <item>2019년</item>
+        <item>2020년</item>
+        <item>2021년</item>
+        <item>2022년</item>
+        <item>2023년</item>
+    </string-array>
+</resources>
